@@ -99,7 +99,6 @@
         const totalVendidoSpan = document.getElementById('total-vendido');
         const tabelaCorpo = document.getElementById('vendas-tabela-corpo');
 
-        // Formata um número para o padrão de moeda brasileira (R$)
         const formatarMoeda = (valor) => {
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -107,11 +106,10 @@
             }).format(valor);
         };
 
-        // Função para buscar o total de vendas do backend e atualizar o display
         const buscarTotalVendido = async (filtro = '') => {
             try {
-                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
-                const url = filtro ? `${window.location.origin}/vendas/total?usuario=${filtro}` : `${window.location.origin}/vendas/total`;
+                // CORREÇÃO: Voltando a usar caminhos relativos para funcionar com vercel.json
+                const url = filtro ? `/vendas/total?usuario=${filtro}` : '/vendas/total';
                 const response = await fetch(url);
                 const data = await response.json();
                 totalVendidoSpan.textContent = formatarMoeda(data.total);
@@ -121,11 +119,10 @@
             }
         };
 
-        // Função para buscar as vendas do backend e preencher a tabela
         const buscarVendas = async (filtro = '') => {
             try {
-                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
-                const url = filtro ? `${window.location.origin}/vendas?usuario=${filtro}` : `${window.location.origin}/vendas`;
+                // CORREÇÃO: Voltando a usar caminhos relativos
+                const url = filtro ? `/vendas?usuario=${filtro}` : '/vendas';
                 const response = await fetch(url);
                 const vendas = await response.json();
                 
@@ -153,11 +150,10 @@
             }
         };
 
-        // Função para excluir uma venda
         const excluirVenda = async (id) => {
             try {
-                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
-                const response = await fetch(`${window.location.origin}/venda/${id}`, {
+                // CORREÇÃO: Voltando a usar caminhos relativos
+                const response = await fetch(`/venda/${id}`, {
                     method: 'DELETE'
                 });
                 if (response.ok) {
@@ -172,7 +168,6 @@
             }
         };
 
-        // Adiciona um listener para o evento de submit do formulário de registro de venda
         vendaForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -183,8 +178,8 @@
             };
 
             try {
-                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
-                const response = await fetch(`${window.location.origin}/venda`, {
+                // CORREÇÃO: Voltando a usar caminhos relativos
+                const response = await fetch('/venda', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(novaVenda)
@@ -202,21 +197,18 @@
             }
         });
 
-        // Adiciona um listener para o botão de buscar (filtro)
         buscarButton.addEventListener('click', () => {
             const filtro = filtroInput.value;
             buscarVendas(filtro);
             buscarTotalVendido(filtro);
         });
 
-        // Adiciona um listener para o campo de filtro para buscar em tempo real
         filtroInput.addEventListener('input', () => {
             const filtro = filtroInput.value;
             buscarVendas(filtro);
             buscarTotalVendido(filtro);
         });
 
-        // Evento que dispara quando a página é completamente carregada
         document.addEventListener('DOMContentLoaded', () => {
             buscarVendas();
             buscarTotalVendido();
