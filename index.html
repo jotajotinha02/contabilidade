@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Vendas</title>
+</head>
+<body>
+  <h1>Registrar Venda</h1>
+  <form id="form-venda">
+    <input type="text" id="usuario" placeholder="Usuário" required />
+    <input type="number" id="quantidade" placeholder="Quantidade" required />
+    <input type="number" id="valor" step="0.01" placeholder="Valor" required />
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h2>Filtro por usuário:</h2>
+  <input type="text" id="filtro" placeholder="Nome do usuário" />
+  <button onclick="buscarVendas()">Buscar</button>
+
+  <h3>Total vendido: <span id="total"></span></h3>
+  <ul id="lista-vendas"></ul>
+
+  <script>
+    const api = 'http://localhost:3000';
+
+    document.getElementById('form-venda').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value;
+      const quantidade = +document.getElementById('quantidade').value;
+      const valor = +document.getElementById('valor').value;
+
+      await fetch(`${api}/venda`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, quantidade, valor }),
+      });
+
+      buscarVendas();
+    });
+
+    async function buscarVendas() {
+      const filtro = document.getElementById('filtro').value;
+      const res = await fetch(`${api}/vendas${filtro ? '?usuario=' + filtro : ''}`);
+      const dados = await res.json();
+
+      const totalRes = await fetch(`${api}/vendas/total${filtro ? '?usuario=' + filtro : ''}`);
+      const totalData = await totalRes.json();
+
+      document.getElementById('lista-vendas').innerHTML = dados
+        .map(v => `<li>${v.usuario} - ${v.quantidade} unid - R$${v.valor} (${v.data})</li>`)
+        .join('');
+
+      document.getElementById('total').innerText = totalData.total ?? 0;
+    }
+
+    buscarVendas();
+  </script>
+</body>
+</html>
