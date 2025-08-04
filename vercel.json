@@ -1,0 +1,31 @@
+// vercel.json
+// Este arquivo de configuração diz ao Vercel como implantar a sua aplicação.
+{
+  // A seção 'builds' configura o ambiente de execução para os arquivos.
+  // Aqui, estamos dizendo ao Vercel para tratar o 'index.js' como um servidor Node.js.
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  // A seção 'routes' define como as requisições HTTP serão roteadas.
+  // Estamos configurando duas regras:
+  "routes": [
+    // 1. Rota para a API:
+    // Qualquer requisição que comece com /vendas, /venda, ou /vendas/total
+    // será encaminhada para o seu servidor Node.js (index.js).
+    {
+      "src": "/(vendas|venda|vendas/total)(.*)",
+      "dest": "index.js"
+    },
+    // 2. Rota para os arquivos estáticos (frontend):
+    // Qualquer outra requisição será tratada como um arquivo estático.
+    // Isso garante que o index.html, styles.css e outros arquivos
+    // sejam servidos corretamente para o navegador.
+    {
+      "src": "/(.*)",
+      "dest": "index.html"
+    }
+  ]
+}
