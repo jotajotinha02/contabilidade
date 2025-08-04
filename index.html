@@ -108,7 +108,6 @@
 
         const buscarTotalVendido = async (filtro = '') => {
             try {
-                // CORREÇÃO: Voltando a usar caminhos relativos para funcionar com vercel.json
                 const url = filtro ? `/vendas/total?usuario=${filtro}` : '/vendas/total';
                 const response = await fetch(url);
                 const data = await response.json();
@@ -121,7 +120,6 @@
 
         const buscarVendas = async (filtro = '') => {
             try {
-                // CORREÇÃO: Voltando a usar caminhos relativos
                 const url = filtro ? `/vendas?usuario=${filtro}` : '/vendas';
                 const response = await fetch(url);
                 const vendas = await response.json();
@@ -152,7 +150,6 @@
 
         const excluirVenda = async (id) => {
             try {
-                // CORREÇÃO: Voltando a usar caminhos relativos
                 const response = await fetch(`/venda/${id}`, {
                     method: 'DELETE'
                 });
@@ -178,7 +175,6 @@
             };
 
             try {
-                // CORREÇÃO: Voltando a usar caminhos relativos
                 const response = await fetch('/venda', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
