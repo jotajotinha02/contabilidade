@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Vendas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 650px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #16a34a;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: #2563eb;
+      margin-bottom: 16px;
+      font-weight: 600;
+      margin-top: 30px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: #374151;
+      margin-top: 30px;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    form input[type="text"],
+    form input[type="number"] {
+      flex: 1 1 48%;
+      padding: 12px 16px;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    form input[type="text"]:focus,
+    form input[type="number"]:focus {
+      border-color: #16a34a;
+      outline: none;
+      box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
+    }
+
+    form button[type="submit"] {
+      flex: 1 1 100%;
+      background-color: #16a34a;
+      color: white;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+
+    form button[type="submit"]:hover {
+      background-color: #15803d;
+    }
+
+    #filtro {
+      flex: 1 1 auto;
+      padding: 12px 16px;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    #filtro:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
+    }
+
+    button[onclick="buscarVendas()"] {
+      background-color: #2563eb;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: background-color 0.25s ease;
+    }
+
+    button[onclick="buscarVendas()"]:hover {
+      background-color: #1d4ed8;
+    }
+
+    .filtro-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    thead {
+      background-color: #e0f2fe;
+    }
+
+    thead th {
+      padding: 14px 16px;
+      font-weight: 700;
+      color: #0369a1;
+      text-align: left;
+      border-bottom: 2px solid #bae6fd;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 1rem;
+      color: #374151;
+    }
+
+    tbody tr:hover {
+      background-color: #dbeafe;
+      cursor: default;
+    }
+
+    .sem-vendas {
+      text-align: center;
+      color: #dc2626;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registrar Venda</h1>
+    <form id="form-venda">
+      <input type="text" id="usuario" placeholder="Usuário" required />
+      <input type="number" id="quantidade" placeholder="Quantidade" required />
+      <input type="number" id="valor" step="0.01" placeholder="Valor" required />
+      <button type="submit">Registrar</button>
+    </form>
+
+    <h2>Filtro por usuário:</h2>
+    <div class="filtro-container">
+      <input type="text" id="filtro" placeholder="Nome do usuário" />
+      <button onclick="buscarVendas()">Buscar</button>
+    </div>
+
+    <h3>Total vendido: <span id="total">R$ 0,00</span></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Quantidade</th>
+          <th>Valor (R$)</th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="lista-vendas">
+        <!-- linhas vão aparecer aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const api = 'http://localhost:3000';
+
+    document.getElementById('form-venda').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value.trim();
+      const quantidade = +document.getElementById('quantidade').value;
+      const valor = +document.getElementById('valor').value;
+
+      if (!usuario || quantidade <= 0 || valor <= 0) {
+        alert('Preencha todos os campos corretamente');
+        return;
+      }
+
+      await fetch(`${api}/venda`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario, quantidade, valor }),
+      });
+
+      document.getElementById('form-venda').reset();
+      buscarVendas();
+    });
+
+    async function buscarVendas() {
+      const filtro = document.getElementById('filtro').value.trim();
+      const res = await fetch(`${api}/vendas${filtro ? '?usuario=' + encodeURIComponent(filtro) : ''}`);
+      const dados = await res.json();
+
+      const totalRes = await fetch(`${api}/vendas/total${filtro ? '?usuario=' + encodeURIComponent(filtro) : ''}`);
+      const totalData = await totalRes.json();
+
+      const tbody = document.getElementById('lista-vendas');
+      tbody.innerHTML = '';
+
+      if (!dados.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="sem-vendas">Nenhuma venda encontrada</td></tr>`;
+      } else {
+        dados.forEach(v => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${v.usuario}</td>
+            <td>${v.quantidade}</td>
+            <td>R$ ${v.valor.toFixed(2)}</td>
+            <td>${v.data ?? ''}</td>
+            <td>
+              <button onclick="excluirVenda('${v.id}')" title="Excluir" style="background:none;border:none;color:#dc2626;font-size:1.2rem;cursor:pointer;">🗑️</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('total').innerText = totalData.total
+        ? `R$ ${totalData.total.toFixed(2)}`
+        : 'R$ 0,00';
+    }
+
+    async function excluirVenda(id) {
+      const confirmar = confirm('Tem certeza que deseja excluir esta venda?');
+      if (!confirmar) return;
+
+      await fetch(`${api}/venda/${id}`, {
+        method: 'DELETE',
+      });
+
+      buscarVendas();
+    }
+
+    buscarVendas();
+    
+  </script>
+</body>
+</html>
