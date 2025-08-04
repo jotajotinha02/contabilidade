@@ -1,14 +1,23 @@
+// Este é o código do seu backend, adaptado para rodar no Vercel como uma Serverless Function.
+
+// Importa os módulos necessários
 const express = require('express');
 const cors = require('cors');
+
+// Cria a aplicação Express
 const app = express();
 
+// Middleware para habilitar o CORS e processar JSON
 app.use(cors());
 app.use(express.json());
 
+// Array em memória para armazenar as vendas. 
+// ATENÇÃO: Em produção real, você usaria um banco de dados (como MongoDB ou Firestore).
+// Essa é uma solução simples para demonstração.
 let vendas = [];
 let idAtual = 1;
 
-// Cadastrar venda
+// Rota para cadastrar uma nova venda
 app.post('/venda', (req, res) => {
   const { usuario, quantidade, valor } = req.body;
   const novaVenda = {
@@ -22,7 +31,7 @@ app.post('/venda', (req, res) => {
   res.status(201).json(novaVenda);
 });
 
-// Buscar vendas (com filtro opcional)
+// Rota para buscar todas as vendas ou filtrar por usuário
 app.get('/vendas', (req, res) => {
   const { usuario } = req.query;
   if (usuario) {
@@ -31,7 +40,7 @@ app.get('/vendas', (req, res) => {
   res.json(vendas);
 });
 
-// Total vendido (com filtro opcional)
+// Rota para calcular o total vendido, com filtro opcional
 app.get('/vendas/total', (req, res) => {
   const { usuario } = req.query;
   const lista = usuario
@@ -42,7 +51,7 @@ app.get('/vendas/total', (req, res) => {
   res.json({ total });
 });
 
-// Excluir venda por ID
+// Rota para excluir uma venda por ID
 app.delete('/venda/:id', (req, res) => {
   const id = Number(req.params.id);
   const index = vendas.findIndex(v => v.id === id);
@@ -54,7 +63,7 @@ app.delete('/venda/:id', (req, res) => {
   }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+// A principal mudança para o Vercel:
+// Em vez de 'app.listen', nós exportamos a aplicação Express.
+// O Vercel se encarrega de iniciar a rota 'http://[seu-site].vercel.app/api'.
+module.exports = app;
