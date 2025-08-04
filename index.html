@@ -1,287 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Registro de Vendas</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9fafb;
-      color: #222;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
-    }
-
-    .container {
-      background: #fff;
-      max-width: 650px;
-      width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      padding: 30px 40px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      color: #16a34a;
-      margin-bottom: 20px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      color: #2563eb;
-      margin-bottom: 16px;
-      font-weight: 600;
-      margin-top: 30px;
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      color: #374151;
-      margin-top: 30px;
-      font-weight: 600;
-      text-align: right;
-    }
-
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-
-    form input[type="text"],
-    form input[type="number"] {
-      flex: 1 1 48%;
-      padding: 12px 16px;
-      border: 2px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-    }
-
-    form input[type="text"]:focus,
-    form input[type="number"]:focus {
-      border-color: #16a34a;
-      outline: none;
-      box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
-    }
-
-    form button[type="submit"] {
-      flex: 1 1 100%;
-      background-color: #16a34a;
-      color: white;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      padding: 14px 0;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-    }
-
-    form button[type="submit"]:hover {
-      background-color: #15803d;
-    }
-
-    #filtro {
-      flex: 1 1 auto;
-      padding: 12px 16px;
-      border: 2px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-    }
-
-    #filtro:focus {
-      border-color: #2563eb;
-      outline: none;
-      box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
-    }
-
-    button[onclick="buscarVendas()"] {
-      background-color: #2563eb;
-      color: white;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 22px;
-      cursor: pointer;
-      margin-left: 10px;
-      transition: background-color 0.25s ease;
-    }
-
-    button[onclick="buscarVendas()"]:hover {
-      background-color: #1d4ed8;
-    }
-
-    .filtro-container {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    thead {
-      background-color: #e0f2fe;
-    }
-
-    thead th {
-      padding: 14px 16px;
-      font-weight: 700;
-      color: #0369a1;
-      text-align: left;
-      border-bottom: 2px solid #bae6fd;
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: #f9fafb;
-    }
-
-    tbody td {
-      padding: 14px 16px;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 1rem;
-      color: #374151;
-    }
-
-    tbody tr:hover {
-      background-color: #dbeafe;
-      cursor: default;
-    }
-
-    .sem-vendas {
-      text-align: center;
-      color: #dc2626;
-      font-weight: 600;
-      padding: 20px 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contabilidade - Vendas</title>
+    <!-- Inclui a biblioteca de CSS Tailwind para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .card-container {
+            max-width: 90%;
+            margin: 2rem auto;
+        }
+        .action-button {
+            transition: all 0.2s;
+        }
+        .action-button:hover {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Registrar Venda</h1>
-    <form id="form-venda">
-      <input type="text" id="usuario" placeholder="Usuário" required />
-      <input type="number" id="quantidade" placeholder="Quantidade" required />
-      <input type="number" id="valor" step="0.01" placeholder="Valor" required />
-      <button type="submit">Registrar</button>
-    </form>
+<body class="bg-gray-100 flex items-start justify-center min-h-screen p-4">
+    <div class="card-container bg-white shadow-xl rounded-2xl p-6 md:p-8 w-full lg:max-w-4xl">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">Registrar Venda</h1>
+        
+        <!-- Formulário para registrar novas vendas -->
+        <form id="venda-form" class="space-y-4">
+            <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div class="flex-1">
+                    <label for="usuario" class="sr-only">Usuário</label>
+                    <input type="text" id="usuario" placeholder="Usuário" class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="flex-1">
+                    <label for="quantidade" class="sr-only">Quantidade</label>
+                    <input type="number" id="quantidade" placeholder="Quantidade" class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="flex-1">
+                    <label for="valor" class="sr-only">Valor (R$)</label>
+                    <input type="number" step="0.01" id="valor" placeholder="Valor (R$)" class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-green-600 text-white font-bold p-3 rounded-xl hover:bg-green-700 transition-colors">
+                Registrar
+            </button>
+        </form>
 
-    <h2>Filtro por usuário:</h2>
-    <div class="filtro-container">
-      <input type="text" id="filtro" placeholder="Nome do usuário" />
-      <button onclick="buscarVendas()">Buscar</button>
+        <div class="my-8 h-px bg-gray-200"></div>
+
+        <!-- Seção de filtro e exibição do total -->
+        <div class="space-y-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Filtro por usuário:</h2>
+            <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
+                <div class="flex-1">
+                    <label for="filtro-usuario" class="sr-only">Nome do usuário</label>
+                    <input type="text" id="filtro-usuario" placeholder="Nome do usuário" class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button id="buscar-button" class="w-full md:w-auto bg-blue-600 text-white font-bold p-3 rounded-xl hover:bg-blue-700 transition-colors">
+                    Buscar
+                </button>
+            </div>
+            
+            <p class="text-xl font-medium text-gray-700 mt-4">
+                Total vendido: <span id="total-vendido" class="font-bold text-green-600">R$ 0,00</span>
+            </p>
+        </div>
+
+        <!-- Tabela para exibir as vendas -->
+        <div class="overflow-x-auto mt-6 rounded-xl shadow-sm border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Usuário</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Quantidade</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Valor (R$)</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="vendas-tabela-corpo" class="bg-white divide-y divide-gray-200">
+                    <!-- As linhas de vendas serão inseridas aqui pelo JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h3>Total vendido: <span id="total">R$ 0,00</span></h3>
+    <script>
+        const vendaForm = document.getElementById('venda-form');
+        const usuarioInput = document.getElementById('usuario');
+        const quantidadeInput = document.getElementById('quantidade');
+        const valorInput = document.getElementById('valor');
+        const filtroInput = document.getElementById('filtro-usuario');
+        const buscarButton = document.getElementById('buscar-button');
+        const totalVendidoSpan = document.getElementById('total-vendido');
+        const tabelaCorpo = document.getElementById('vendas-tabela-corpo');
 
-    <table>
-      <thead>
-        <tr>
-          <th>Usuário</th>
-          <th>Quantidade</th>
-          <th>Valor (R$)</th>
-          <th>Data</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista-vendas">
-        <!-- linhas vão aparecer aqui -->
-      </tbody>
-    </table>
-  </div>
+        // Formata um número para o padrão de moeda brasileira (R$)
+        const formatarMoeda = (valor) => {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        };
 
-  <script>
-    const api = 'http://localhost:3000';
+        // Função para buscar o total de vendas do backend e atualizar o display
+        const buscarTotalVendido = async (filtro = '') => {
+            try {
+                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
+                const url = filtro ? `${window.location.origin}/vendas/total?usuario=${filtro}` : `${window.location.origin}/vendas/total`;
+                const response = await fetch(url);
+                const data = await response.json();
+                totalVendidoSpan.textContent = formatarMoeda(data.total);
+            } catch (error) {
+                console.error('Erro ao buscar o total de vendas:', error);
+                totalVendidoSpan.textContent = 'Erro ao carregar';
+            }
+        };
 
-    document.getElementById('form-venda').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const usuario = document.getElementById('usuario').value.trim();
-      const quantidade = +document.getElementById('quantidade').value;
-      const valor = +document.getElementById('valor').value;
+        // Função para buscar as vendas do backend e preencher a tabela
+        const buscarVendas = async (filtro = '') => {
+            try {
+                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
+                const url = filtro ? `${window.location.origin}/vendas?usuario=${filtro}` : `${window.location.origin}/vendas`;
+                const response = await fetch(url);
+                const vendas = await response.json();
+                
+                tabelaCorpo.innerHTML = '';
+                
+                vendas.forEach(venda => {
+                    const row = tabelaCorpo.insertRow();
+                    row.className = 'text-gray-700';
 
-      if (!usuario || quantidade <= 0 || valor <= 0) {
-        alert('Preencha todos os campos corretamente');
-        return;
-      }
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">${venda.usuario}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${venda.quantidade}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatarMoeda(venda.valor)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${venda.data}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button onclick="excluirVenda(${venda.id})" class="text-red-600 hover:text-red-900 action-button">
+                                Excluir
+                            </button>
+                        </td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar vendas:', error);
+                tabelaCorpo.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Erro ao carregar os dados.</td></tr>`;
+            }
+        };
 
-      await fetch(`${api}/venda`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario, quantidade, valor }),
-      });
+        // Função para excluir uma venda
+        const excluirVenda = async (id) => {
+            try {
+                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
+                const response = await fetch(`${window.location.origin}/venda/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    const filtro = filtroInput.value;
+                    buscarVendas(filtro);
+                    buscarTotalVendido(filtro);
+                } else {
+                    console.error('Erro ao excluir venda:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro de conexão ao excluir venda:', error);
+            }
+        };
 
-      document.getElementById('form-venda').reset();
-      buscarVendas();
-    });
+        // Adiciona um listener para o evento de submit do formulário de registro de venda
+        vendaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-    async function buscarVendas() {
-      const filtro = document.getElementById('filtro').value.trim();
-      const res = await fetch(`${api}/vendas${filtro ? '?usuario=' + encodeURIComponent(filtro) : ''}`);
-      const dados = await res.json();
+            const novaVenda = {
+                usuario: usuarioInput.value,
+                quantidade: Number(quantidadeInput.value),
+                valor: Number(valorInput.value)
+            };
 
-      const totalRes = await fetch(`${api}/vendas/total${filtro ? '?usuario=' + encodeURIComponent(filtro) : ''}`);
-      const totalData = await totalRes.json();
+            try {
+                // CORREÇÃO: Usando window.location.origin para garantir que a URL seja absoluta
+                const response = await fetch(`${window.location.origin}/venda`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novaVenda)
+                });
 
-      const tbody = document.getElementById('lista-vendas');
-      tbody.innerHTML = '';
-
-      if (!dados.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="sem-vendas">Nenhuma venda encontrada</td></tr>`;
-      } else {
-        dados.forEach(v => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${v.usuario}</td>
-            <td>${v.quantidade}</td>
-            <td>R$ ${v.valor.toFixed(2)}</td>
-            <td>${v.data ?? ''}</td>
-            <td>
-              <button onclick="excluirVenda('${v.id}')" title="Excluir" style="background:none;border:none;color:#dc2626;font-size:1.2rem;cursor:pointer;">🗑️</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
+                if (response.status === 201) {
+                    vendaForm.reset();
+                    buscarVendas();
+                    buscarTotalVendido();
+                } else {
+                    console.error('Erro ao registrar a venda:', await response.text());
+                }
+            } catch (error) {
+                console.error('Erro de conexão ao registrar a venda:', error);
+            }
         });
-      }
 
-      document.getElementById('total').innerText = totalData.total
-        ? `R$ ${totalData.total.toFixed(2)}`
-        : 'R$ 0,00';
-    }
+        // Adiciona um listener para o botão de buscar (filtro)
+        buscarButton.addEventListener('click', () => {
+            const filtro = filtroInput.value;
+            buscarVendas(filtro);
+            buscarTotalVendido(filtro);
+        });
 
-    async function excluirVenda(id) {
-      const confirmar = confirm('Tem certeza que deseja excluir esta venda?');
-      if (!confirmar) return;
+        // Adiciona um listener para o campo de filtro para buscar em tempo real
+        filtroInput.addEventListener('input', () => {
+            const filtro = filtroInput.value;
+            buscarVendas(filtro);
+            buscarTotalVendido(filtro);
+        });
 
-      await fetch(`${api}/venda/${id}`, {
-        method: 'DELETE',
-      });
-
-      buscarVendas();
-    }
-
-    buscarVendas();
-    
-  </script>
+        // Evento que dispara quando a página é completamente carregada
+        document.addEventListener('DOMContentLoaded', () => {
+            buscarVendas();
+            buscarTotalVendido();
+        });
+    </script>
 </body>
 </html>
